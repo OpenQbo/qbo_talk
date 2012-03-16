@@ -3,6 +3,7 @@ Source: qboros-electric-qbo-talk
 Version: 1.0-openqbo0
 Priority: standard
 Architecture: amd64
+Section: OpenQbo
 Depends: festival, ros-electric-ros
 Maintainer: Miguel Angel Julian <miguel.a.j@openqbo.org>
 Homepage: http://openqbo.org/wiki/doku.php?id=qbo_apps:ros_pack:qbo_talk

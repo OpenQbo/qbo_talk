@@ -1,4 +1,4 @@
-qbo_arduqbo v1.0
+qbo_talk v1.0
 28-02-2012
 
 === Copyright ===
@@ -19,19 +19,7 @@ This node could be execute using the launcher. With that launchers you could set
 
 === Arvhive Contents ===
 
-./manifest.xml	Ros information file
-./Authors	Author of the code
-./Makefile	Makefile File for compilation
-./default.yaml  Default QBO configuration for the application
-./launch/qbo.launch	Launcher for the application
-./src/*         Source code under GPL v2 License
-./msg/*         ROS messages created for its use with this driver
-./srv/*         ROS services created for its use with this driver
-./include/*     Include files of the driver under GPL v2 License
-./control	File to generate .deb packages
-./LINCESES	The complete text of the licenses used
-./CMakeLists.txt	CMakelist file for compilation
-./README	This file
+
 
 === Changelog ===
 
@@ -41,7 +29,7 @@ qbo_arduqbo v1.0
 
 === Homepage ===
 
-http://openqbo.org/wiki/doku.php?id=qbo_apps:ros_pack:qbo_arduqbo
+http://openqbo.org/wiki/doku.php?id=qbo_apps:ros_pack:qbo_talk
 
 === Contact ===
 

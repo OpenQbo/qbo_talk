@@ -57,7 +57,7 @@ class festival_node(object):
         self.festivalClient = pyFestival.FestivalClient()
         self.festivalClient.open()
         #self.festivalClient.setVoice("cmu_us_clb_arctic_clunits")
-        self.festivalClient.setVoice("cmu_us_awb_arctic_clunits")
+        #self.festivalClient.setVoice("cmu_us_awb_arctic_clunits")
         #self.festivalClient.setVoice("voice_kal_diphone")
         command_service = rospy.Service('/qbo_talk/festival_command', Text2Speach, self.processCommand)
         talk_service = rospy.Service('/qbo_talk/festival_say', Text2Speach, self.say)
