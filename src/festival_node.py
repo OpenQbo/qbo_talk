@@ -35,11 +35,11 @@ class festival_node(object):
         return True
 
     def say(self,req):
-        self.festivalClient.say(req.command.replace(".",". silencebreak "))
+        self.festivalClient.say(req.command)
         return True
 
     def sayNoWait(self,req):
-        self.festivalClient.say(req.command.replace(".",". silencebreak "),False)
+        self.festivalClient.say(req.command,False)
         return True
 
     def changeLanguage(self,req):
