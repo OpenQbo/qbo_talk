@@ -2,7 +2,7 @@
 #
 # Software License Agreement (GPLv2 License)
 #
-# Copyright (c) 2012 Thecorpora, Inc.
+# Copyright (c) 2012 OpenQbo, Inc.
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License as 
@@ -107,7 +107,9 @@ class FestivalClient(object):
         self._sock.close()
         
     def send(self, cmd):
+        print "Sending "+cmd+" ..."
         self._sock.send(cmd)
+        print "Sended "+cmd
     
     def recv(self):
         data = self._sock.recv(1024)
@@ -118,16 +120,20 @@ class FestivalClient(object):
         with self.lock:
             args0 = ["echo", text]
             args1 = ["iconv", "-f", "utf-8", "-t", "iso-8859-1"]
+            print "1"
             tmpcount=self._count;
             self._count=self._count+1
+            print "2"
             p0 = subprocess.Popen( args0, 
                               stdout = subprocess.PIPE,
                               close_fds = True) 
+            print "3"
             p1 = subprocess.Popen( args1, 
                               stdin = p0.stdout, 
                               stdout = subprocess.PIPE, 
                               stderr = subprocess.PIPE,
                               close_fds = True) 
+            print "4"
             text, stderr = p1.communicate()
             text='(SayText "' + text.strip() + '")'
             print "start speech:"+str(tmpcount)
@@ -149,8 +155,9 @@ class FestivalClient(object):
         #    while re.search("OK", data) == None:
         #        data = self._sock.recv(1024)
 
-        while re.search("Utterance", data) == None:
-            data = self._sock.recv(1024)
+        #while re.search("Utterance", data) == None:
+        while re.search("ft_StUfF_keyOK", data) == None:
+            data = data+self._sock.recv(1024)
             print "start--"+data+"--end"
             time.sleep(.01)
         print "Utterance found"
@@ -182,6 +189,8 @@ def test_server_client():
     time.sleep(5)
     print "talk again"
     festCli.say("Helo Miguel, how are you?")
+    time.sleep(5)
+    festCli.say("This is a test")
     time.sleep(5)
     festCli.close()
     festSev.stop()
