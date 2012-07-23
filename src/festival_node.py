@@ -26,9 +26,17 @@ import roslib; roslib.load_manifest('qbo_talk')
 import rospy
 import pyFestival
 import time
+from std_msgs.msg import String
+
 from qbo_talk.srv import Text2Speach
 
 class festival_node(object):
+
+    def system_language(self,data):
+        if data.data=="en":
+            self.festivalClient.setVoice("cmu_us_awb_arctic_clunits")
+        elif data.data=="es":
+            self.festivalClient.setVoice("JuntaDeAndalucia_es_sf_diphone")
 
     def processCommand(self,req):
         self.festivalClient.send(req.command)
@@ -64,6 +72,10 @@ class festival_node(object):
         talk_service_no_wait = rospy.Service('/qbo_talk/festival_say_no_wait', Text2Speach, self.sayNoWait)
         language_service = rospy.Service('/qbo_talk/festival_language', Text2Speach, self.changeLanguage)
         duration_service = rospy.Service('/qbo_talk/festival_speed', Text2Speach, self.changeSpeed)
+
+# Add language subscriber
+        rospy.Subscriber("/system_lang", String, self.system_language)
+
         self.festivalClient.say("Hello");
         rospy.spin()
         self.festivalClient.close()
