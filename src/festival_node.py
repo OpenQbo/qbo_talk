@@ -33,10 +33,13 @@ from qbo_talk.srv import Text2Speach
 class festival_node(object):
 
     def system_language(self,data):
-        if data.data=="en":
-            self.festivalClient.setVoice("cmu_us_awb_arctic_clunits")
-        elif data.data=="es":
-            self.festivalClient.setVoice("JuntaDeAndalucia_es_sf_diphone")
+        try:
+            voices=self.languages_voices[data.data]
+            self.festivalClient.setVoice(voices)
+            rospy.loginfo("Voice changed to "+voices+"("+data.data+")")
+        except KeyError:
+            rospy.loginfo("Error: Language not recognized("+data.data+")")
+           
 
     def processCommand(self,req):
         self.festivalClient.send(req.command)
@@ -59,6 +62,7 @@ class festival_node(object):
         return True
 
     def __init__(self):
+        self.languages_voices={'en':'cmu_us_awb_arctic_clunits','es':'JuntaDeAndalucia_es_sf_diphone'}
         rospy.init_node('festival_server')
         self.festivalServer = pyFestival.FestivalServer()
         time.sleep(2)
