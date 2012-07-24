@@ -33,13 +33,15 @@ from qbo_talk.srv import Text2Speach
 class festival_node(object):
 
     def system_language(self,data):
+        self.set_language(data.data)
+
+    def set_language(self,lang):
         try:
-            voices=self.languages_voices[data.data]
+            voices=self.languages_voices[lang]
             self.festivalClient.setVoice(voices)
-            rospy.loginfo("Voice changed to "+voices+"("+data.data+")")
+            rospy.loginfo("Voice changed to "+voices+"("+lang+")")
         except KeyError:
-            rospy.loginfo("Error: Language not recognized("+data.data+")")
-           
+            rospy.loginfo("Error: Language not recognized("+lang+")")
 
     def processCommand(self,req):
         self.festivalClient.send(req.command)
@@ -68,16 +70,21 @@ class festival_node(object):
         time.sleep(2)
         self.festivalClient = pyFestival.FestivalClient()
         self.festivalClient.open()
-        #self.festivalClient.setVoice("cmu_us_clb_arctic_clunits")
-        #self.festivalClient.setVoice("cmu_us_awb_arctic_clunits")
-        #self.festivalClient.setVoice("voice_kal_diphone")
+        #Set default language
+#        self.set_language("en")
+
         command_service = rospy.Service('/qbo_talk/festival_command', Text2Speach, self.processCommand)
         talk_service = rospy.Service('/qbo_talk/festival_say', Text2Speach, self.say)
         talk_service_no_wait = rospy.Service('/qbo_talk/festival_say_no_wait', Text2Speach, self.sayNoWait)
         language_service = rospy.Service('/qbo_talk/festival_language', Text2Speach, self.changeLanguage)
         duration_service = rospy.Service('/qbo_talk/festival_speed', Text2Speach, self.changeSpeed)
 
-# Add language subscriber
+        #Read current system language
+        lang = rospy.get_param("/system_lang", "en")
+        self.set_language("en")
+        self.set_language(lang)
+
+        # Add language subscriber
         rospy.Subscriber("/system_lang", String, self.system_language)
 
         self.festivalClient.say("Hello");
