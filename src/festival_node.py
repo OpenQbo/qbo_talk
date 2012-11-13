@@ -64,7 +64,8 @@ class festival_node(object):
         return True
 
     def __init__(self):
-        self.languages_voices={'en':'cmu_us_awb_arctic_clunits','es':'JuntaDeAndalucia_es_sf_diphone'}
+        #self.languages_voices={'en':'cmu_us_awb_arctic_clunits','es':'JuntaDeAndalucia_es_sf_diphone'}
+        self.languages_voices={'en':'cmu_us_slt_arctic_cluints','es':'JuntaDeAndalucia_es_sf_diphone'}
         rospy.init_node('festival_server')
         self.festivalServer = pyFestival.FestivalServer()
         time.sleep(2)

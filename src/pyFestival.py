@@ -97,6 +97,7 @@ class FestivalClient(object):
         self._host = host
         self._port = port
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._sock.settimeout(0.2)
         self.duration = 1.0
         self.voice = "cmu_us_clb_arctic_clunits"
         
@@ -112,12 +113,19 @@ class FestivalClient(object):
         print "Sended "+cmd
     
     def recv(self):
-        data = self._sock.recv(1024)
-        return None
+        data = ''
+        try:
+            data = self._sock.recv(1024)
+        except Exception:
+            data = ''
+        print data, 'len: ',len(data)
+        return data
     
     def say(self, text, wait=True):
         print "A new string arrived:"+text
         with self.lock:
+            while len(self.recv())>0:
+                print 'Full!!'
             args0 = ["echo", text]
             args1 = ["iconv", "-f", "utf-8", "-t", "iso-8859-1"]
             print "1"
@@ -149,17 +157,26 @@ class FestivalClient(object):
         return "OK"
 
     def waitEndSpeach(self):
-        data=self._sock.recv(1024)
+        try:
+            data=self._sock.recv(1024)
+        except Exception:
+            data = ''
         print "start--"+data+"--end"
         #if re.search("LP", data) != None:
         #    while re.search("OK", data) == None:
         #        data = self._sock.recv(1024)
 
         #while re.search("Utterance", data) == None:
-        while re.search("ft_StUfF_keyOK", data) == None:
-            data = data+self._sock.recv(1024)
+        timeNow = time.time()
+        timeStart = timeNow
+        while re.search("ft_StUfF_keyOK", data) == None and (timeNow-timeStart)<30.0:
+            try:
+                data = data+self._sock.recv(1024)
+            except Exception:
+                data = ''
             print "start--"+data+"--end"
             time.sleep(.01)
+            timeNow = time.time()
         print "Utterance found"
 
     def setDuration(self, duration):
@@ -171,6 +188,8 @@ class FestivalClient(object):
 
     def setVoice(self, voice):
         self.voice = voice
+        if self.voice == 'cmu_us_awb_arctic_clunits':
+           self.voice='cmu_us_clb_arctic_clunits'
         command = "(voice_" + self.voice + ")"
         self.send(command)
         self.recv()
