@@ -40,8 +40,10 @@ class festival_node(object):
             voices=self.languages_voices[lang]
             self.festivalClient.setVoice(str(voices))
             rospy.loginfo("Voice changed to "+voices+"("+lang+")")
+            return True
         except KeyError:
             rospy.loginfo("Error: Language not recognized("+lang+")")
+            return False
 
     def processCommand(self,req):
         self.festivalClient.send(req.command)
@@ -58,6 +60,9 @@ class festival_node(object):
     def changeLanguage(self,req):
         self.festivalClient.setVoice(str(req.command))
         return True
+
+    def setLanguage(self,req):
+        return self.set_language(str(req.command))
 
     def changeSpeed(self,req):
         self.festivalClient.setDuration(float(req.command))
@@ -79,8 +84,7 @@ class festival_node(object):
         talk_service_no_wait = rospy.Service('/qbo_talk/festival_say_no_wait', Text2Speach, self.sayNoWait)
         language_service = rospy.Service('/qbo_talk/festival_language', Text2Speach, self.changeLanguage)
         duration_service = rospy.Service('/qbo_talk/festival_speed', Text2Speach, self.changeSpeed)
-
-
+        set_language_service = rospy.Service('/qbo_talk/set_language', Text2Speach, self.setLanguage)
         
         #Read current system language
         lang = rospy.get_param("/system_lang", "en")
