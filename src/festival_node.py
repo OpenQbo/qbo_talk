@@ -38,7 +38,7 @@ class festival_node(object):
     def set_language(self,lang):
         try:
             voices=self.languages_voices[lang]
-            self.festivalClient.setVoice(voices)
+            self.festivalClient.setVoice(str(voices))
             rospy.loginfo("Voice changed to "+voices+"("+lang+")")
         except KeyError:
             rospy.loginfo("Error: Language not recognized("+lang+")")
@@ -56,7 +56,7 @@ class festival_node(object):
         return True
 
     def changeLanguage(self,req):
-        self.festivalClient.setVoice(req.command)
+        self.festivalClient.setVoice(str(req.command))
         return True
 
     def changeSpeed(self,req):
@@ -65,7 +65,7 @@ class festival_node(object):
 
     def __init__(self):
         #self.languages_voices={'en':'cmu_us_awb_arctic_clunits','es':'JuntaDeAndalucia_es_sf_diphone'}
-        self.languages_voices={'en':'cmu_us_slt_arctic_cluints','es':'JuntaDeAndalucia_es_sf_diphone'}
+        self.languages_voices={'en':'cmu_us_slt_arctic_clunits','es':'JuntaDeAndalucia_es_sf_diphone'}
         rospy.init_node('festival_server')
         self.festivalServer = pyFestival.FestivalServer()
         time.sleep(2)
@@ -80,15 +80,17 @@ class festival_node(object):
         language_service = rospy.Service('/qbo_talk/festival_language', Text2Speach, self.changeLanguage)
         duration_service = rospy.Service('/qbo_talk/festival_speed', Text2Speach, self.changeSpeed)
 
+
+        
         #Read current system language
         lang = rospy.get_param("/system_lang", "en")
-        self.set_language("en")
         self.set_language(lang)
 
         # Add language subscriber
         rospy.Subscriber("/system_lang", String, self.system_language)
 
-        self.festivalClient.say("Hello");
+        self.festivalClient.say("Hello")
+
         rospy.spin()
         self.festivalClient.close()
         self.festivalServer.stop()
