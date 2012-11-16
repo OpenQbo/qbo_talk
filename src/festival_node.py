@@ -73,7 +73,7 @@ class festival_node(object):
         self.languages_voices={'en':'cmu_us_slt_arctic_clunits','es':'JuntaDeAndalucia_es_sf_diphone'}
         rospy.init_node('festival_server')
         self.festivalServer = pyFestival.FestivalServer()
-        time.sleep(2)
+        time.sleep(5)
         self.festivalClient = pyFestival.FestivalClient()
         self.festivalClient.open()
         #Set default language

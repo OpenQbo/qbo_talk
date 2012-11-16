@@ -90,7 +90,7 @@ class FestivalServer(threading.Thread):
             return None
 
 class FestivalClient(object):
-    def __init__(self, port=1314, host="localhost"):
+    def __init__(self, port=1314, host="127.0.0.1"):
         self._count = 0;
         self._talking = 0;
         self.lock = threading.Lock()
@@ -99,7 +99,7 @@ class FestivalClient(object):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._sock.settimeout(0.2)
         self.duration = 1.0
-        self.voice = "cmu_us_clb_arctic_clunits"
+        self.voice = "cmu_us_slt_arctic_clunits"
         
     def open(self):
         self._sock.connect((self._host, self._port))
@@ -177,7 +177,12 @@ class FestivalClient(object):
             print "start--"+data+"--end"
             time.sleep(.01)
             timeNow = time.time()
-        print "Utterance found"
+        if (timeNow-timeStart)>=30.0:
+            print "Utterance not found"
+            return False
+        else:
+            print "Utterance found"
+            return True
 
     def setDuration(self, duration):
         self.duration = duration
@@ -188,8 +193,6 @@ class FestivalClient(object):
 
     def setVoice(self, voice):
         self.voice = voice
-        if self.voice == 'cmu_us_awb_arctic_clunits':
-           self.voice='cmu_us_clb_arctic_clunits'
         command = "(voice_" + self.voice + ")"
         self.send(command)
         self.recv()
