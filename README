@@ -3,11 +3,11 @@ qbo_talk v1.0
 
 === Copyright ===
 
-Copyright (C) 2012 Openqbo Inc.
+Copyright (C) 2012 Thecorpora Inc.
 
 === Description  ===
 
-This enables the comunication with the QBO controler boards
+Node that integrate Festival and Ros
 
 === Building ===
 
@@ -15,7 +15,6 @@ rosmake
 
 === Run ===
 
-This node could be execute using the launcher. With that launchers you could set with parameters to set and which value.
 
 === Arvhive Contents ===
 
@@ -23,9 +22,7 @@ This node could be execute using the launcher. With that launchers you could set
 
 === Changelog ===
 
-qbo_arduqbo v1.0
-	* First release
--- Miguel Angel Julian <miguel.a.j@openqbo.org>  28-02-2012
+qbo_talk v1.0
 
 === Homepage ===
 
