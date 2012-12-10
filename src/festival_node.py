@@ -33,6 +33,7 @@ from qbo_talk.srv import Text2Speach
 class festival_node(object):
 
     def system_language(self,data):
+        print "Qbo_talk -> System language has been changed: "+data.data
         self.set_language(data.data)
 
     def set_language(self,lang):
@@ -71,6 +72,7 @@ class festival_node(object):
     def __init__(self):
         #self.languages_voices={'en':'cmu_us_awb_arctic_clunits','es':'JuntaDeAndalucia_es_sf_diphone'}
         self.languages_voices={'en':'cmu_us_slt_arctic_clunits','es':'JuntaDeAndalucia_es_sf_diphone'}
+        self.greetings={'en':'Hello','es':'Hola'}
         rospy.init_node('festival_server')
         self.festivalServer = pyFestival.FestivalServer()
         time.sleep(5)
@@ -88,12 +90,21 @@ class festival_node(object):
         
         #Read current system language
         lang = rospy.get_param("/system_lang", "en")
+        rospy.loginfo("Qbo talk: language detected-> "+lang)
         self.set_language(lang)
 
         # Add language subscriber
         rospy.Subscriber("/system_lang", String, self.system_language)
 
-        self.festivalClient.say("Hello")
+        #Get greetings text
+        greetings_say = self.greetings['en']
+
+        try:
+           greetings_say = self.greetings[lang]
+        except Exception, e:
+           print "Error getting greetings in the system language for qbo_talk"
+      
+        self.festivalClient.say(greetings_say)
 
         rospy.spin()
         self.festivalClient.close()
